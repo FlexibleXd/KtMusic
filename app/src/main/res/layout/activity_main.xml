@@ -8,7 +8,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/rl_info"
+        android:id="@+id/rlInfo"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
@@ -46,7 +46,7 @@
         android:id="@+id/rvMusic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/rl_info">
+        android:layout_above="@id/rlInfo">
 
     </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

@@ -6,9 +6,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import flexible.xd.android_base.base.BaseActivity
 import flexible.xd.android_base.utils.FileUtils
-import flexible.xd.android_base.utils.LogUtils
 import flexible.xd.android_base.utils.PermissionUtils
 import flexible.xd.android_base.widget.RcvDividerLine
+import kotlinx.android.synthetic.main.activity_lyric.*
 import kotlinx.android.synthetic.main.activity_main.*
 import xd.flexible.ktmusic.R
 import xd.flexible.ktmusic.base.BaseMediaPlayer
@@ -27,6 +27,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        startActivity(LyricActivity::class.java)
         initView()
         initData()
         initEvent()
@@ -34,12 +35,18 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initEvent() {
+        pcCircular.setOnClickListener {
+            if (ijkMediaPlayer.isPlaying) {
+                ijkMediaPlayer.pause()
+                pcCircular.stop()
+            } else {
+                ijkMediaPlayer.start()
+                pcCircular.play()
+            }
+        }
         val time: TimerTask = timerTask {
             if (ijkMediaPlayer.isPlaying) {
                 runOnUiThread {
-                    LogUtils.LOGE("main", "ijkMediaPlayer.currentPosition" + ijkMediaPlayer.currentPosition)
-                    LogUtils.LOGE("main", "iijkMediaPlayer.fileSize" + ijkMediaPlayer.duration)
-                    LogUtils.LOGE("main", "iijkMediaPlayer.toint" + (ijkMediaPlayer.currentPosition * 100 / ijkMediaPlayer.duration).toInt())
                     if (ijkMediaPlayer.duration.toInt() != 0) {
                         pcCircular.progress = if ((ijkMediaPlayer.currentPosition * 100 / ijkMediaPlayer.duration).toInt() == 0) 1
                         else (ijkMediaPlayer.currentPosition * 100 / ijkMediaPlayer.duration).toInt()
@@ -67,9 +74,6 @@ class MainActivity : BaseActivity() {
                         ijkMediaPlayer.dataSource = musicList[pos].path
                         ijkMediaPlayer.prepareAsync()
                         ijkMediaPlayer.start()
-//                        ijkMediaPlayer.setOnPreparedListener {
-//                            ijkMediaPlayer.start()
-//                        }
                         musicAdapter.isPlaying(pos)
                         pausePos = -1
                     }
@@ -83,16 +87,12 @@ class MainActivity : BaseActivity() {
                         ijkMediaPlayer.reset()
                         ijkMediaPlayer.dataSource = musicList[pos].path
                         ijkMediaPlayer.prepareAsync()
-//                    ijkMediaPlayer.setOnPreparedListener {
-//                        ijkMediaPlayer.start()
-//                    }
                         tvName.text = musicList[pos].name
                         tvInfo.text = musicList[pos].author
                         musicAdapter.isPlaying(pos)
                         isPause = true
                         pausePos = -1
                     }
-
                 }
                 musicAdapter.notifyDataSetChanged()
             }

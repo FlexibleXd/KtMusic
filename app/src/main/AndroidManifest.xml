@@ -24,6 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.LyricActivity"
+            android:label="播放"
+            android:launchMode="singleTop"
+            android:theme="@style/FlexibleTheme.Base" />
+
         <activity android:name="flexible.xd.android_base.utils.PermissionUtils$PermissionActivity"></activity>
     </application>
 
