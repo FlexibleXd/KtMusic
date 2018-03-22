@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import flexible.xd.android_base.base.BaseActivity
 import flexible.xd.android_base.utils.FileUtils
+import flexible.xd.android_base.utils.LogUtils
 import flexible.xd.android_base.utils.PermissionUtils
 import flexible.xd.android_base.widget.RcvDividerLine
 import kotlinx.android.synthetic.main.activity_lyric.*
@@ -47,6 +48,7 @@ class MainActivity : BaseActivity() {
         val time: TimerTask = timerTask {
             if (ijkMediaPlayer.isPlaying) {
                 runOnUiThread {
+                    //duration 总时长 currentPosition 当前播放位置
                     if (ijkMediaPlayer.duration.toInt() != 0) {
                         pcCircular.progress = if ((ijkMediaPlayer.currentPosition * 100 / ijkMediaPlayer.duration).toInt() == 0) 1
                         else (ijkMediaPlayer.currentPosition * 100 / ijkMediaPlayer.duration).toInt()

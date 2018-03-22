@@ -6,26 +6,24 @@ import flexible.xd.android_base.utils.FileUtils
 import flexible.xd.android_base.utils.LogUtils
 import xd.flexible.ktmusic.R
 import kotlinx.android.synthetic.main.activity_lyric.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_lyric.view.*
+import xd.flexible.ktmusic.R.id.lvLyric
+import xd.flexible.ktmusic.base.BaseMediaPlayer
 import xd.flexible.ktmusic.base.Config
 import xd.flexible.ktmusic.model.LyricBean
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
+import java.util.*
+import kotlin.concurrent.timerTask
 
 
 /**
  * Created by Flexible on 2018/3/21 0021.
  */
 class LyricActivity : ToolBarActivity() {
-//    private lateinit var lyricAdapter: LyricAdapter
-
-//    private val lyricText = arrayListOf<LyricBean>()
-//        set(value) {
-//            field = value
-//            lyricAdapter.notifyDataSetChanged()
-//        }
-
+    var ijkMediaPlayer = BaseMediaPlayer.getMediaPlayer()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lyric)
@@ -35,6 +33,17 @@ class LyricActivity : ToolBarActivity() {
     }
 
     private fun initEvent() {
+        val time: TimerTask = timerTask {
+            if (ijkMediaPlayer.isPlaying) {
+                runOnUiThread {
+                    LogUtils.LOGE("main", " ijkMediaPlayer.currentPosition.toString()" +  ijkMediaPlayer.currentPosition.toString())
+                    lvLyric.nowTime = ijkMediaPlayer.currentPosition.toString()
+
+                }
+            }
+        }
+        val timer = Timer()
+        timer.schedule(time, 0, 1000)
     }
 
     private fun initData() {
@@ -72,8 +81,10 @@ class LyricActivity : ToolBarActivity() {
     }
 
     private fun initView() {
-//        rvLyric.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-//        lyricAdapter = LyricAdapter(lyricText, this)
-//        rvLyric.adapter = lyricAdapter
+
+//        ijkMediaPlayer.reset()
+        ijkMediaPlayer.dataSource = Config.LOCAL_MUSIC + "/苏诗丁 - 血腥爱情故事.mp3"
+        ijkMediaPlayer.prepareAsync()
+        ijkMediaPlayer.start()
     }
 }

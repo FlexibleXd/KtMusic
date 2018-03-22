@@ -16,11 +16,17 @@ import xd.flexible.ktmusic.model.LyricBean
 class LyricAdapter(var data: List<LyricBean>, private var ctx: Context = BaseApp.getAppContext()) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var onItemClickListener: OnItemClickListener? = null
+    var nowPos: Int? = 0
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         var mHolder = holder as LyricVH
         val music = data[position]
         with(mHolder.itemView) {
+            if (nowPos == position) {
+                tvLyric.setTextColor(resources.getColor(R.color.red))
+            } else {
+                tvLyric.setTextColor(resources.getColor(R.color.flexible_text_color))
+            }
             tvLyric.text = music.text
         }
     }

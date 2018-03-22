@@ -3,12 +3,15 @@ package xd.flexible.ktmusic.widget
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import xd.flexible.ktmusic.R
 import kotlinx.android.synthetic.main.view_lyric.view.*
 import xd.flexible.ktmusic.model.LyricBean
 import xd.flexible.ktmusic.ui.adapter.LyricAdapter
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Flexible on 2018/3/21 0021.
@@ -19,18 +22,15 @@ class LyricView : FrameLayout {
 
     var lyricText = arrayListOf<LyricBean>()
 
+    var dataFormat = SimpleDateFormat("mm:ss.SS")
 
-//    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-//        super.onLayout(true, left, top, right, bottom)
-//    }
+    var nowTime: String = "00:00.00"
+        set(value) {
+            field = dataFormat.format(Date(value.toLong()))
+            lyricScroll()
+        }
 
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//        val count = childCount
-//        for (i in 0 until count) {
-//            getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec)
-//        }
-//    }
+    var nowPos: Int = 0
 
     fun notify(value: List<LyricBean>) {
         lyricText.clear()
@@ -56,12 +56,40 @@ class LyricView : FrameLayout {
 
     private fun initView() {
         val view = View.inflate(context, R.layout.view_lyric, this)
-//         = LayoutInflater.from(context).inflate(R.layout.view_lyric, null, false)
-//        addView(view, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         with(view) {
             rvLyric.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             lyricAdapter = LyricAdapter(lyricText, context)
             rvLyric.adapter = lyricAdapter
         }
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when (event!!.action) {
+            MotionEvent.ACTION_DOWN -> {
+            }
+            MotionEvent.ACTION_MOVE -> {
+            }
+            MotionEvent.ACTION_UP -> {
+            }
+            else -> {
+            }
+        }
+
+        return super.onTouchEvent(event)
+    }
+
+    /**
+     * 歌词滑动
+     */
+    private fun lyricScroll() {
+        val lyric = lyricText[nowPos + 1]
+        val posTime = dataFormat.parse(lyric.time)
+        val nowTime = dataFormat.parse(nowTime)
+        if (nowTime.after(posTime)) {
+            rvLyric.smoothScrollToPosition(++nowPos)
+            lyricAdapter.nowPos=nowPos
+            lyricAdapter.notifyDataSetChanged()
+        }
+    }
+
 }
