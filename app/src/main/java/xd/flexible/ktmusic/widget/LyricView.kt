@@ -1,17 +1,22 @@
 package xd.flexible.ktmusic.widget
 
 import android.content.Context
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import xd.flexible.ktmusic.R
 import kotlinx.android.synthetic.main.view_lyric.view.*
+import xd.flexible.ktmusic.R.id.rvLyric
 import xd.flexible.ktmusic.model.LyricBean
 import xd.flexible.ktmusic.ui.adapter.LyricAdapter
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 /**
  * Created by Flexible on 2018/3/21 0021.
@@ -60,6 +65,9 @@ class LyricView : FrameLayout {
             rvLyric.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             lyricAdapter = LyricAdapter(lyricText, context)
             rvLyric.adapter = lyricAdapter
+
+//
+
         }
     }
 
@@ -86,8 +94,8 @@ class LyricView : FrameLayout {
         val posTime = dataFormat.parse(lyric.time)
         val nowTime = dataFormat.parse(nowTime)
         if (nowTime.after(posTime)) {
-            rvLyric.smoothScrollToPosition(++nowPos)
-            lyricAdapter.nowPos=nowPos
+            (rvLyric.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(++nowPos, rvLyric.height / 2)
+            lyricAdapter.nowPos = nowPos
             lyricAdapter.notifyDataSetChanged()
         }
     }
